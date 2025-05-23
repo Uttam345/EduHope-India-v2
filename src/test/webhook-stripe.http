@@ -1,0 +1,44 @@
+### Test Stripe Webhook Function
+
+### Valid checkout.session.completed event
+POST {{baseUrl}}/functions/v1/webhook-stripe
+Content-Type: application/json
+Stripe-Signature: {{stripeSignature}}
+
+{
+  "id": "evt_test",
+  "type": "checkout.session.completed",
+  "data": {
+    "object": {
+      "id": "cs_test",
+      "client_reference_id": "user_123",
+      "customer_email": "test@example.com",
+      "amount_total": 100000,
+      "payment_method_types": ["card"],
+      "metadata": {
+        "donor_name": "Test User",
+        "donor_phone": "1234567890"
+      }
+    }
+  }
+}
+
+### Invalid signature
+POST {{baseUrl}}/functions/v1/webhook-stripe
+Content-Type: application/json
+Stripe-Signature: invalid_signature
+
+{
+  "id": "evt_test",
+  "type": "checkout.session.completed"
+}
+
+### Unsupported event type
+POST {{baseUrl}}/functions/v1/webhook-stripe
+Content-Type: application/json
+Stripe-Signature: {{stripeSignature}}
+
+{
+  "id": "evt_test",
+  "type": "unsupported.event"
+}

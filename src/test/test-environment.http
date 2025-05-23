@@ -1,0 +1,3 @@
+@baseUrl = {{$processEnv VITE_SUPABASE_URL}}
+@anonKey = {{$processEnv VITE_SUPABASE_ANON_KEY}}
+@stripeSignature = {{$processEnv STRIPE_WEBHOOK_SECRET}}
