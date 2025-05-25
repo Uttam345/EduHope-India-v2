@@ -9,7 +9,7 @@ const AboutPage: React.FC = () => {
 
   const team = [
     {
-      name: 'Mr Uttam Bansal',
+      name: 'Uttam Bansal',
       role: 'Founder & Executive Director',
       bio: 'Former educator with 15+ years experience in child welfare programs across India.',
       image:
