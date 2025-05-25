@@ -1,8 +1,11 @@
+// @deno-types="https://deno.land/std@0.168.0/http/server.ts"
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { MailerSend, EmailParams, Recipient, Sender } from 'mailersend';
 
 const mailersend = new MailerSend({
-  apiKey: Deno.env.get('MAILERSEND_API_KEY')!,
+  apiKey: (typeof Deno !== "undefined" && Deno.env.get)
+    ? Deno.env.get('MAILERSEND_API_KEY')!
+    : process.env.MAILERSEND_API_KEY!,
 });
 
 serve(async (req: { json: () => PromiseLike<{ email: any; name: any; }>|{ email: any; name: any; }; }) => {
