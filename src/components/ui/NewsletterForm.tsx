@@ -45,7 +45,7 @@ const NewsletterForm: React.FC<NewsletterFormProps> = ({ onSuccess }) => {
     setIsSubmitting(true);
 
     try {
-      // Check for existing subscription - removed .single() to handle array response
+      // Check for existing subscription
       const { data: existingSubscriptions } = await supabase
         .from('newsletter_subscriptions')
         .select()
@@ -56,12 +56,29 @@ const NewsletterForm: React.FC<NewsletterFormProps> = ({ onSuccess }) => {
           type: 'error',
           message: 'This email is already subscribed to our newsletter.',
         });
-        setIsSubmitting(false); // Reset submit state before returning
+        setIsSubmitting(false);
         return;
       }
 
-      await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-welcome-email`,
+      // Insert new subscription into database
+      const { error: insertError } = await supabase
+        .from('newsletter_subscriptions')
+        .insert([
+          {
+            email: email,
+            name: name || null,
+            //subscribed_at: new Date().toISOString(),
+            //is_active: true
+          }
+        ]);
+
+      if (insertError) {
+        throw new Error(`Database insert failed: ${insertError.message}`);
+      }
+
+      // Send welcome email
+      const emailResponse = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-welcome-mail`,
         {
           method: 'POST',
           headers: {
@@ -71,6 +88,11 @@ const NewsletterForm: React.FC<NewsletterFormProps> = ({ onSuccess }) => {
           body: JSON.stringify({ email, name }),
         }
       );
+
+      if (!emailResponse.ok) {
+        console.warn('Welcome email failed to send, but subscription was saved');
+        // Don't throw error here - subscription is saved, email failure is secondary
+      }
 
       setStatus({
         type: 'success',

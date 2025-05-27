@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS donations (
 CREATE TABLE IF NOT EXISTS newsletter_subscriptions (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   subscriber_id uuid REFERENCES auth.users,
+  name text,
   email text NOT NULL UNIQUE,
   subscription_start_date timestamptz DEFAULT now(),
   subscription_end_date timestamptz,
@@ -87,6 +88,12 @@ CREATE POLICY "Users can view their own subscriptions"
   FOR SELECT
   TO authenticated
   USING (auth.uid() = subscriber_id);
+
+-- Allow anyone to insert
+create policy "Allow insert for all"
+on newsletter_subscriptions
+for insert
+with check (true);
 
 CREATE POLICY "Service role can manage all subscriptions"
   ON newsletter_subscriptions
