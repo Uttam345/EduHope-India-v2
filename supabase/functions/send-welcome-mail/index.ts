@@ -27,7 +27,7 @@ serve(async (req: { json: () => PromiseLike<{ email: any; name: any; }>|{ email:
 });
 */
 
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+/*import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { MailerSend, EmailParams, Recipient, Sender } from 'npm:mailersend';
 import { createClient } from 'npm:@supabase/supabase-js@2.39.7';
 
@@ -116,6 +116,116 @@ console.log('Sending welcome email to:', email);
 
     return new Response(
       JSON.stringify({ success: true }),
+      { 
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      }
+    );
+  } catch (error) {
+    console.error('Newsletter subscription error:', error);
+    
+    return new Response(
+      JSON.stringify({ 
+        error: error instanceof Error ? error.message : 'An unexpected error occurred',
+        details: error instanceof Error ? error.stack : undefined
+      }),
+      { 
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      }
+    );
+  }
+});
+*/
+
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import FormData from "npm:form-data@4.0.1";
+import Mailgun from "npm:mailgun.js@11.1.0";
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+};
+
+serve(async (req) => {
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { status: 200, headers: corsHeaders });
+  }
+
+  try {
+    const { email, name } = await req.json();
+
+    // Validate required fields
+    if (!email) {
+      return new Response(
+        JSON.stringify({ error: 'Email is required' }),
+        { 
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
+    }
+
+    // Get Mailgun API key and domain from environment
+    const mailgunApiKey = Deno.env.get('MAILGUN_API_KEY');
+    const mailgunDomain = Deno.env.get('MAILGUN_DOMAIN') || 'sandbox8e97fa9b407c4f4c9e06824253ae5088.mailgun.org';
+    
+    if (!mailgunApiKey) {
+      throw new Error('Mailgun API key is not configured');
+    }
+
+    // Initialize Mailgun client
+    const mailgun = new Mailgun(FormData);
+    const mg = mailgun.client({
+      username: "api",
+      key: mailgunApiKey,
+      // Uncomment if using EU domain:
+      // url: "https://api.eu.mailgun.net"
+    });
+
+    // Send email using Mailgun
+    const data = await mg.messages.create(mailgunDomain, {
+      from: `EduHope India Newsletter <postmaster@${mailgunDomain}>`,
+      to: [email],
+      subject: "Welcome to EduHope India Newsletter!",
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h1 style="color: #1f2937;">Welcome to EduHope India! 🎉</h1>
+          <p>Dear ${name || 'Supporter'},</p>
+          <p>Thank you for subscribing to our newsletter. We're excited to have you join our community of supporters helping homeless children across India.</p>
+          <p>You'll receive regular updates about:</p>
+          <ul>
+            <li>Our latest initiatives and success stories</li>
+            <li>Ways to get involved and make a difference</li>
+            <li>Impact reports and project updates</li>
+          </ul>
+          <p>If you have any questions, feel free to reply to this email.</p>
+          <p>Best regards,<br>The EduHope India Team</p>
+        </div>
+      `,
+      text: `Welcome to EduHope India! 🎉
+
+Dear ${name || 'Supporter'},
+
+Thank you for subscribing to our newsletter. We're excited to have you join our community of supporters helping homeless children across India.
+
+You'll receive regular updates about:
+- Our latest initiatives and success stories
+- Ways to get involved and make a difference
+- Impact reports and project updates
+
+If you have any questions, feel free to reply to this email.
+
+Best regards,
+The EduHope India Team`,
+    });
+
+    console.log('Email sent successfully:', data);
+
+    return new Response(
+      JSON.stringify({ success: true, messageId: data.id }),
       { 
         status: 200,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
