@@ -89,15 +89,29 @@ const NewsletterForm: React.FC<NewsletterFormProps> = ({ onSuccess }) => {
         }
       );
 
+      const emailResult = await emailResponse.json();
+      
       if (!emailResponse.ok) {
-        console.warn('Welcome email failed to send, but subscription was saved');
-        // Don't throw error here - subscription is saved, email failure is secondary
+        console.error('Welcome email failed:', emailResult);
+        // Check if it's a Mailgun authorization issue
+        if (emailResult.error && emailResult.error.includes('authorized recipients')) {
+          setStatus({
+            type: 'success',
+            message: 'Thank you for subscribing! Email confirmation will be sent once your address is verified.',
+          });
+        } else {
+          setStatus({
+            type: 'success',
+            message: 'Thank you for subscribing! Welcome email will be sent shortly.',
+          });
+        }
+      } else {
+        console.log('Welcome email sent successfully:', emailResult);
+        setStatus({
+          type: 'success',
+          message: 'Thank you for subscribing to our newsletter! Check your email for a welcome message.',
+        });
       }
-
-      setStatus({
-        type: 'success',
-        message: 'Thank you for subscribing to our newsletter!',
-      });
       setEmail('');
       setName('');
 

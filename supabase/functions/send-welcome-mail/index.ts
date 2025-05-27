@@ -139,8 +139,6 @@ console.log('Sending welcome email to:', email);
 */
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import FormData from "npm:form-data@4.0.1";
-import Mailgun from "npm:mailgun.js@11.1.0";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -155,10 +153,13 @@ serve(async (req) => {
   }
 
   try {
+    console.log('Send welcome mail function called');
     const { email, name } = await req.json();
+    console.log('Request data:', { email, name: name || 'No name provided' });
 
     // Validate required fields
     if (!email) {
+      console.error('No email provided');
       return new Response(
         JSON.stringify({ error: 'Email is required' }),
         { 
@@ -168,44 +169,42 @@ serve(async (req) => {
       );
     }
 
-    // Get Mailgun API key and domain from environment
+    // Get Mailgun API key from environment
     const mailgunApiKey = Deno.env.get('MAILGUN_API_KEY');
     const mailgunDomain = Deno.env.get('MAILGUN_DOMAIN') || 'sandbox8e97fa9b407c4f4c9e06824253ae5088.mailgun.org';
     
+    console.log('Environment check:', {
+      hasApiKey: !!mailgunApiKey,
+      domain: mailgunDomain,
+      domainLength: mailgunDomain?.length
+    });
+    
     if (!mailgunApiKey) {
+      console.error('Mailgun API key not found in environment');
       throw new Error('Mailgun API key is not configured');
     }
 
-    // Initialize Mailgun client
-    const mailgun = new Mailgun(FormData);
-    const mg = mailgun.client({
-      username: "api",
-      key: mailgunApiKey,
-      // Uncomment if using EU domain:
-      // url: "https://api.eu.mailgun.net"
-    });
-
-    // Send email using Mailgun
-    const data = await mg.messages.create(mailgunDomain, {
-      from: `EduHope India Newsletter <postmaster@${mailgunDomain}>`,
-      to: [email],
-      subject: "Welcome to EduHope India Newsletter!",
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h1 style="color: #1f2937;">Welcome to EduHope India! 🎉</h1>
-          <p>Dear ${name || 'Supporter'},</p>
-          <p>Thank you for subscribing to our newsletter. We're excited to have you join our community of supporters helping homeless children across India.</p>
-          <p>You'll receive regular updates about:</p>
-          <ul>
-            <li>Our latest initiatives and success stories</li>
-            <li>Ways to get involved and make a difference</li>
-            <li>Impact reports and project updates</li>
-          </ul>
-          <p>If you have any questions, feel free to reply to this email.</p>
-          <p>Best regards,<br>The EduHope India Team</p>
-        </div>
-      `,
-      text: `Welcome to EduHope India! 🎉
+    // Prepare form data for Mailgun API
+    const formData = new FormData();
+    formData.append('from', `EduHope India Newsletter <postmaster@${mailgunDomain}>`);
+    formData.append('to', email);
+    formData.append('subject', 'Welcome to EduHope India Newsletter!');
+    formData.append('html', `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h1 style="color: #1f2937;">Welcome to EduHope India! 🎉</h1>
+        <p>Dear ${name || 'Supporter'},</p>
+        <p>Thank you for subscribing to our newsletter. We're excited to have you join our community of supporters helping homeless children across India.</p>
+        <p>You'll receive regular updates about:</p>
+        <ul>
+          <li>Our latest initiatives and success stories</li>
+          <li>Ways to get involved and make a difference</li>
+          <li>Impact reports and project updates</li>
+        </ul>
+        <p>If you have any questions, feel free to reply to this email.</p>
+        <p>Best regards,<br>The EduHope India Team</p>
+      </div>
+    `);
+    formData.append('text', `Welcome to EduHope India! 🎉
 
 Dear ${name || 'Supporter'},
 
@@ -219,13 +218,33 @@ You'll receive regular updates about:
 If you have any questions, feel free to reply to this email.
 
 Best regards,
-The EduHope India Team`,
+The EduHope India Team`);    // Send email via Mailgun API
+    console.log('Attempting to send email via Mailgun...');
+    const mailgunResponse = await fetch(`https://api.mailgun.net/v3/${mailgunDomain}/messages`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Basic ${btoa(`api:${mailgunApiKey}`)}`,
+      },
+      body: formData,
     });
 
-    console.log('Email sent successfully:', data);
+    console.log('Mailgun response status:', mailgunResponse.status);
+    
+    if (!mailgunResponse.ok) {
+      const errorText = await mailgunResponse.text();
+      console.error('Mailgun API error:', {
+        status: mailgunResponse.status,
+        statusText: mailgunResponse.statusText,
+        error: errorText
+      });
+      throw new Error(`Mailgun API error: ${mailgunResponse.status} - ${errorText}`);
+    }
+
+    const result = await mailgunResponse.json();
+    console.log('Email sent successfully:', result);
 
     return new Response(
-      JSON.stringify({ success: true, messageId: data.id }),
+      JSON.stringify({ success: true, messageId: result.id }),
       { 
         status: 200,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
