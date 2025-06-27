@@ -106,7 +106,7 @@ const NewsletterForm: React.FC<NewsletterFormProps> = ({ onSuccess }) => {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Your name (optional)"
+            placeholder="Your name"
             className="w-full px-3 py-2 mb-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             disabled={isSubmitting}
           />
