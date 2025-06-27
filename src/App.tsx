@@ -2,6 +2,8 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
+import ScrollToTop from './components/ui/ScrollToTop';
+import ScrollToTopButton from './components/ui/ScrollToTopButton';
 import HomePage from './pages/HomePage';
 import DonationPage from './pages/DonationPage';
 import DonationSuccessPage from './pages/DonationSuccessPage';
@@ -13,6 +15,7 @@ import NotFoundPage from './pages/NotFoundPage';
 const App: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen">
+      <ScrollToTop />
       <Navbar />
       <main className="flex-grow">
         <Routes>
@@ -26,6 +29,7 @@ const App: React.FC = () => {
         </Routes>
       </main>
       <Footer />
+      <ScrollToTopButton />
     </div>
   );
 };
