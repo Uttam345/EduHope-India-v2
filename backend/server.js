@@ -55,12 +55,16 @@ const corsOptions = {
       'http://localhost:3000',
       'http://localhost:5173',
       'https://eduhopeindia.org',
-      'https://www.eduhopeindia.org'
+      'https://www.eduhopeindia.org',
+      'https://eduhope-india.vercel.app'
     ];
+    
+    console.log('🔍 CORS Check:', { origin, allowedOrigins, envCorsOrigin: process.env.CORS_ORIGIN });
     
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.log('❌ CORS Rejected:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -124,13 +128,19 @@ app.use(notFoundHandler);
 app.use(errorHandler);
 
 // Start server
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
+  const isProduction = process.env.NODE_ENV === 'production';
+  const serverUrl = isProduction 
+    ? `https://${process.env.RENDER_EXTERNAL_HOSTNAME || 'your-app.onrender.com'}` 
+    : `http://localhost:${PORT}`;
+    
   console.log(`
 🚀 EduHope India Backend Server Started
 📍 Environment: ${process.env.NODE_ENV || 'development'}
 🌐 Server running on port ${PORT}
-🔗 API URL: http://localhost:${PORT}
+🔗 Server URL: ${serverUrl}
 📧 Email Service: Initializing...
+🗄️ Database: ${dbConnected ? 'Connected' : 'Disconnected'}
   `);
 });
 

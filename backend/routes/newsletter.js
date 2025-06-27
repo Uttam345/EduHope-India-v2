@@ -16,6 +16,35 @@ router.get('/test', (req, res) => {
   });
 });
 
+// Debug endpoint to test validation
+router.post('/debug-validation', (req, res) => {
+  console.log('🔍 Debug validation request:', req.body);
+  
+  const { error, value } = validateNewsletterSubscription(req.body);
+  
+  if (error) {
+    console.log('❌ Validation failed:', error.details);
+    return res.status(400).json({
+      success: false,
+      message: 'Validation failed',
+      errors: error.details.map(detail => ({
+        field: detail.path[0],
+        message: detail.message,
+        value: detail.context?.value
+      })),
+      originalBody: req.body
+    });
+  }
+  
+  console.log('✅ Validation passed:', value);
+  res.json({
+    success: true,
+    message: 'Validation passed',
+    validatedData: value,
+    originalBody: req.body
+  });
+});
+
 // Test Gmail newsletter service
 router.post('/test-gmail', async (req, res) => {
   try {
@@ -64,7 +93,14 @@ const isDatabaseConnected = () => {
 
 // Middleware to check database connection for routes that need it
 const requireDatabase = (req, res, next) => {
-  if (!isDatabaseConnected()) {
+  const dbState = mongoose.connection.readyState;
+  console.log('🗄️ Database state check:', { 
+    readyState: dbState, 
+    states: { 0: 'disconnected', 1: 'connected', 2: 'connecting', 3: 'disconnecting' } 
+  });
+  
+  if (dbState !== 1) {
+    console.log('❌ Database not available, readyState:', dbState);
     return res.status(503).json({
       success: false,
       message: 'Database not available. Please try again later.',
@@ -77,9 +113,16 @@ const requireDatabase = (req, res, next) => {
 // Subscribe to newsletter
 router.post('/subscribe', requireDatabase, async (req, res) => {
   try {
+    console.log('📧 Newsletter subscription request:', {
+      body: req.body,
+      headers: req.headers,
+      ip: req.ip
+    });
+
     // Validate input
     const { error, value } = validateNewsletterSubscription(req.body);
     if (error) {
+      console.log('❌ Validation error:', error.details);
       return res.status(400).json({
         success: false,
         message: 'Validation failed',
@@ -89,6 +132,8 @@ router.post('/subscribe', requireDatabase, async (req, res) => {
         }))
       });
     }
+
+    console.log('✅ Validation passed:', value);
 
     const { email, name, source, preferences } = value;
 
