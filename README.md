@@ -38,7 +38,7 @@ A production-ready MERN stack application with secure donation processing, newsl
 
 ### **Prerequisites**
 - Node.js 18+ 
-- npm or yarn
+- npm or bun
 - MongoDB Atlas account
 - Razorpay account
 - Gmail account with App Password
@@ -150,7 +150,7 @@ PORT=5000
 MONGODB_URI=your_mongodb_atlas_connection_string
 RAZORPAY_KEY_ID=your_razorpay_key_id
 RAZORPAY_KEY_SECRET=your_razorpay_key_secret
-RESEND_API_KEY=your_resend_api_key
+NODEMAILER_USER_MAIL=your_mail_id
 FROM_EMAIL=newsletter@yourdomain.com
 ```
 
@@ -185,7 +185,7 @@ VITE_RAZORPAY_KEY_ID=your_razorpay_key_id
 - **Backend**: Render.com
 - **Frontend**: Vercel
 - **Database**: MongoDB Atlas
-- **Email**: Resend
+- **Email**: Nodemailer
 - **Payments**: Razorpay
 
 ---
