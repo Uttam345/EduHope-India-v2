@@ -16,6 +16,57 @@ router.get('/test', (req, res) => {
   });
 });
 
+// Simple connectivity test
+router.get('/ping', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Newsletter API is reachable',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Test subscription without database requirement
+router.post('/test-subscribe', async (req, res) => {
+  try {
+    console.log('🔍 Test subscription request:', {
+      body: req.body,
+      headers: req.headers['content-type'],
+      origin: req.headers['origin']
+    });
+
+    // Validate input only
+    const { error, value } = validateNewsletterSubscription(req.body);
+    if (error) {
+      console.log('❌ Validation failed:', error.details);
+      return res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors: error.details.map(detail => ({
+          field: detail.path[0],
+          message: detail.message,
+          value: detail.context?.value
+        })),
+        originalBody: req.body
+      });
+    }
+
+    console.log('✅ Validation passed:', value);
+    res.json({
+      success: true,
+      message: 'Test subscription validation passed',
+      validatedData: value
+    });
+
+  } catch (error) {
+    console.error('❌ Test subscription error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Test subscription failed',
+      error: error.message
+    });
+  }
+});
+
 // Debug endpoint to test validation
 router.post('/debug-validation', (req, res) => {
   console.log('🔍 Debug validation request:', req.body);
