@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Goal, Map, Users, Heart, Award, BookOpen } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const AboutPage: React.FC = () => {
   // Update page title
@@ -264,12 +265,12 @@ const AboutPage: React.FC = () => {
             part of transforming lives across India.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <a
-              href="/donate"
+            <Link
+              to="/donate"
               className="btn bg-white text-primary hover:bg-gray-100"
             >
               Donate
-            </a>
+            </Link>
             <a
               href="/contact"
               className="btn btn-outline border-white text-white hover:bg-white hover:text-primary"

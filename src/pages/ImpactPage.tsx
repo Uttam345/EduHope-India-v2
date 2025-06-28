@@ -3,6 +3,7 @@ import { Pi as Pie } from 'lucide-react';
 import Testimonial from '../components/testimonial/Testimonial';
 import ImpactCounter from '../components/impact/ImpactCounter';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const ImpactPage: React.FC = () => {
   // Update page title
@@ -298,12 +299,12 @@ const ImpactPage: React.FC = () => {
             to a brighter tomorrow for countless children.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <a
-              href="/donate"
+            <Link
+              to="/donate"
               className="btn bg-white text-secondary hover:bg-gray-100"
             >
               Donate Now
-            </a>
+            </Link>
             <a
               href="/volunteer"
               className="btn btn-outline border-white text-white hover:bg-white hover:text-secondary"
