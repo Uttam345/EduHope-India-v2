@@ -56,7 +56,9 @@ const corsOptions = {
       'http://localhost:5173',
       'https://eduhopeindia.org',
       'https://www.eduhopeindia.org',
-      'https://eduhope-india.vercel.app'
+      'https://eduhope-india.vercel.app',
+      'https://www.eduhopeindia.me',
+      'https://eduhopeindia.me'
     ];
     
     console.log('🔍 CORS Check:', { origin, allowedOrigins, envCorsOrigin: process.env.CORS_ORIGIN });
