@@ -12,7 +12,7 @@ const AboutPage: React.FC = () => {
     {
       name: 'Uttam Bansal',
       role: 'Founder & Executive Director',
-      bio: 'Former educator with 15+ years experience in child welfare programs across India.',
+      bio: 'Former educator with 2+ years experience in child welfare programs across India.',
       image:
         'https://images.pexels.com/photos/32219360/pexels-photo-32219360.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
     },
@@ -46,7 +46,7 @@ const AboutPage: React.FC = () => {
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl font-bold mb-6">About EduHope India</h1>
             <p className="text-xl mb-8">
-              Founded in 2020, we're committed to breaking the cycle of poverty
+              Founded in 2025, we're committed to breaking the cycle of poverty
               through education, nutrition, and family support for homeless
               children across India.
             </p>
@@ -61,8 +61,8 @@ const AboutPage: React.FC = () => {
               <h2 className="text-3xl font-bold mb-6">Our Story</h2>
               <p className="text-gray-600 mb-4">
                 EduHope India began when our founder, Uttam Bansal, witnessed
-                firsthand the struggles of homeless children in Kanpur and Delhi
-                who were desperate to learn but lacked access to education.
+                firsthand the struggles of homeless children in Kanpur who were
+                desperate to learn but lacked access to education.
               </p>
               <p className="text-gray-600 mb-4">
                 What started as a small initiative teaching 15 children under a
