@@ -87,6 +87,8 @@ const AboutPage: React.FC = () => {
         </div>
       </section>
 
+
+
       <section className="py-16 bg-gray-50">
         <div className="container-custom">
           <div className="text-center mb-12">
@@ -200,6 +202,8 @@ const AboutPage: React.FC = () => {
         </div>
       </section>
 
+
+
       <section className="py-16 bg-gray-50">
         <div className="container-custom">
           <div className="text-center mb-12">
@@ -233,6 +237,8 @@ const AboutPage: React.FC = () => {
         </div>
       </section>
 
+
+
       <section className="py-16 bg-white">
         <div className="container-custom">
           <div className="text-center mb-12">
@@ -256,6 +262,8 @@ const AboutPage: React.FC = () => {
           </div>
         </div>
       </section>
+
+
 
       <section className="py-16 bg-primary text-white">
         <div className="container-custom text-center">

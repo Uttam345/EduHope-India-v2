@@ -28,7 +28,7 @@ router.get('/ping', (req, res) => {
 // Test subscription without database requirement
 router.post('/test-subscribe', async (req, res) => {
   try {
-    console.log('🔍 Test subscription request:', {
+    console.log('Test subscription request:', {
       body: req.body,
       headers: req.headers['content-type'],
       origin: req.headers['origin']
@@ -37,7 +37,7 @@ router.post('/test-subscribe', async (req, res) => {
     // Validate input only
     const { error, value } = validateNewsletterSubscription(req.body);
     if (error) {
-      console.log('❌ Validation failed:', error.details);
+      console.log('Validation failed:', error.details);
       return res.status(400).json({
         success: false,
         message: 'Validation failed',
@@ -50,7 +50,7 @@ router.post('/test-subscribe', async (req, res) => {
       });
     }
 
-    console.log('✅ Validation passed:', value);
+    console.log('Validation passed:', value);
     res.json({
       success: true,
       message: 'Test subscription validation passed',
@@ -58,7 +58,7 @@ router.post('/test-subscribe', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('❌ Test subscription error:', error);
+    console.error('Test subscription error:', error);
     res.status(500).json({
       success: false,
       message: 'Test subscription failed',
@@ -69,12 +69,12 @@ router.post('/test-subscribe', async (req, res) => {
 
 // Debug endpoint to test validation
 router.post('/debug-validation', (req, res) => {
-  console.log('🔍 Debug validation request:', req.body);
+  console.log('Debug validation request:', req.body);
   
   const { error, value } = validateNewsletterSubscription(req.body);
   
   if (error) {
-    console.log('❌ Validation failed:', error.details);
+    console.log('Validation failed:', error.details);
     return res.status(400).json({
       success: false,
       message: 'Validation failed',
@@ -87,7 +87,7 @@ router.post('/debug-validation', (req, res) => {
     });
   }
   
-  console.log('✅ Validation passed:', value);
+  console.log('Validation passed:', value);
   res.json({
     success: true,
     message: 'Validation passed',
@@ -128,7 +128,7 @@ router.post('/test-gmail', async (req, res) => {
     }
     
   } catch (error) {
-    console.error('❌ Gmail test error:', error);
+    console.error('Gmail test error:', error);
     res.status(500).json({
       success: false,
       message: 'Gmail newsletter service test failed',
@@ -145,13 +145,13 @@ const isDatabaseConnected = () => {
 // Middleware to check database connection for routes that need it
 const requireDatabase = (req, res, next) => {
   const dbState = mongoose.connection.readyState;
-  console.log('🗄️ Database state check:', { 
+  console.log('Database state check:', { 
     readyState: dbState, 
     states: { 0: 'disconnected', 1: 'connected', 2: 'connecting', 3: 'disconnecting' } 
   });
   
   if (dbState !== 1) {
-    console.log('❌ Database not available, readyState:', dbState);
+    console.log('Database not available, readyState:', dbState);
     return res.status(503).json({
       success: false,
       message: 'Database not available. Please try again later.',
@@ -164,7 +164,7 @@ const requireDatabase = (req, res, next) => {
 // Subscribe to newsletter
 router.post('/subscribe', requireDatabase, async (req, res) => {
   try {
-    console.log('📧 Newsletter subscription request:', {
+    console.log('Newsletter subscription request:', {
       body: req.body,
       headers: req.headers,
       ip: req.ip
@@ -173,7 +173,7 @@ router.post('/subscribe', requireDatabase, async (req, res) => {
     // Validate input
     const { error, value } = validateNewsletterSubscription(req.body);
     if (error) {
-      console.log('❌ Validation error:', error.details);
+      console.log('Validation error:', error.details);
       return res.status(400).json({
         success: false,
         message: 'Validation failed',
@@ -184,7 +184,7 @@ router.post('/subscribe', requireDatabase, async (req, res) => {
       });
     }
 
-    console.log('✅ Validation passed:', value);
+    console.log('Validation passed:', value);
 
     const { email, name, source, preferences } = value;
 
@@ -211,7 +211,7 @@ router.post('/subscribe', requireDatabase, async (req, res) => {
         try {
           const emailResult = await emailService.sendWelcomeEmail(email, name);
         } catch (emailError) {
-          console.error('❌ Welcome email failed:', emailError);
+          console.error('Welcome email failed:', emailError);
           // Don't fail the subscription if email fails
         }
 
@@ -264,7 +264,7 @@ router.post('/subscribe', requireDatabase, async (req, res) => {
         }
       });
     } catch (emailError) {
-      console.error('❌ Welcome email failed:', emailError);
+      console.error('Welcome email failed:', emailError);
       
       res.status(201).json({
         success: true,
@@ -282,7 +282,7 @@ router.post('/subscribe', requireDatabase, async (req, res) => {
     }
 
   } catch (error) {
-    console.error('❌ Newsletter subscription error:', error);
+    console.error('Newsletter subscription error:', error);
     
     if (error.code === 11000) {
       return res.status(409).json({
@@ -334,7 +334,7 @@ router.post('/unsubscribe', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('❌ Unsubscribe error:', error);
+    console.error('Unsubscribe error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to process unsubscribe request. Please try again later.'
@@ -377,7 +377,7 @@ router.get('/status/:email', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('❌ Status check error:', error);
+    console.error('Status check error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to check subscription status.'
@@ -411,7 +411,7 @@ router.get('/stats', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('❌ Stats error:', error);
+    console.error('Stats error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to fetch newsletter statistics.'
@@ -433,7 +433,7 @@ router.get('/email/health', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('❌ Email health check error:', error);
+    console.error('Email health check error:', error);
     res.status(500).json({
       success: false,
       message: 'Email service health check failed.'

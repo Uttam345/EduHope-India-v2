@@ -36,7 +36,7 @@ const ImpactCounter: React.FC<ImpactCounterProps> = ({ icon, count, label, suffi
     if (!isVisible) return;
     
     let start = 0;
-    const increment = count / 50; // Adjust for animation speed
+    const increment = count / 50; // Adjustment for animation speed
     const timer = setInterval(() => {
       start += increment;
       if (start >= count) {

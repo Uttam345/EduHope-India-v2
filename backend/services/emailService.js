@@ -15,13 +15,15 @@ class EmailService {
         await this.initializeGmail();
         return;
       } catch (error) {
-        console.warn('⚠️ Gmail initialization failed:', error.message);
+        console.warn('Gmail initialization failed:', error.message);
       }
     }
 
-    // Fallback: Use test account for development
+    // Fallback: Using test account for development
     await this.initializeTestAccount();
   }
+
+  /*
   async initializeResend() {
     this.transporter = nodemailer.createTransport({
       host: 'smtp.resend.com',
@@ -35,7 +37,7 @@ class EmailService {
 
     await this.transporter.verify();
     this.currentProvider = 'Resend';
-    console.log('✅ Email service initialized with Resend');
+    console.log('Email service initialized with Resend');
   }
 
   async initializeEthereal() {
@@ -51,8 +53,9 @@ class EmailService {
 
     await this.transporter.verify();
     this.currentProvider = 'Ethereal Email';
-    console.log('✅ Email service initialized with Ethereal Email');
+    console.log('Email service initialized with Ethereal Email');
   }
+  */
 
   async initializeGmail() {
     this.transporter = nodemailer.createTransport({
@@ -65,7 +68,7 @@ class EmailService {
 
     await this.transporter.verify();
     this.currentProvider = 'Gmail SMTP';
-    console.log('✅ Email service initialized with Gmail SMTP');
+    console.log('Email service initialized with Gmail SMTP');
   }
 
   async initializeTestAccount() {
@@ -83,8 +86,8 @@ class EmailService {
     });
 
     this.currentProvider = 'Test Account';
-    console.log('✅ Email service initialized with test account');
-    console.log('📧 Test credentials:', {
+    console.log('Email service initialized with test account');
+    console.log('Test credentials:', {
       user: testAccount.user,
       pass: testAccount.pass,
     });
@@ -96,7 +99,7 @@ class EmailService {
       const result = await gmailNewsletterService.sendWelcomeEmail(email, name);
       return result;
     } catch (error) {
-      console.error('❌ Failed to send welcome email via Gmail service:', error);
+      console.error('Failed to send welcome email via Gmail service:', error);
       
       // Fallback to original email service
       if (!this.transporter) {
@@ -124,7 +127,7 @@ class EmailService {
         // Log preview URL for test accounts
         if (this.currentProvider === 'Test Account' || this.currentProvider === 'Ethereal Email') {
           const previewUrl = nodemailer.getTestMessageUrl(info);
-          console.log('📧 Preview URL:', previewUrl);
+          console.log('Preview URL:', previewUrl);
         }
 
         return {
@@ -134,7 +137,7 @@ class EmailService {
           previewUrl: nodemailer.getTestMessageUrl(info) || null,
         };
       } catch (fallbackError) {
-        console.error('❌ Failed to send welcome email:', fallbackError);
+        console.error('Failed to send welcome email:', fallbackError);
         throw fallbackError;
       }
     }
@@ -146,7 +149,7 @@ class EmailService {
       const result = await gmailNewsletterService.sendDonationConfirmationEmail(donationData);
       return result;
     } catch (error) {
-      console.error('❌ Failed to send donation confirmation via Gmail service:', error);
+      console.error('Failed to send donation confirmation via Gmail service:', error);
       throw error;
     }
   }

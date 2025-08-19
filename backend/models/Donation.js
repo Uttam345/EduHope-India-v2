@@ -98,12 +98,12 @@ donationSchema.index({ createdAt: -1 });
 donationSchema.index({ razorpayOrderId: 1 });
 donationSchema.index({ razorpayPaymentId: 1 });
 
-// Virtual for formatted amount
+// Virtual for formatted amount with commas
 donationSchema.virtual('formattedAmount').get(function() {
   return `₹${this.amount.toLocaleString('en-IN')}`;
 });
 
-// Method to generate receipt number
+// Method to generate receipt number with format (EDU20250818XXXX (EDU + date + random 4 digits))
 donationSchema.methods.generateReceipt = function() {
   const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
   const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');

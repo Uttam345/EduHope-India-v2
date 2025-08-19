@@ -62,7 +62,7 @@ router.post('/create-order', paymentLimiter, async (req, res) => {
     // Validate request body
     const { error, value } = createOrderSchema.validate(req.body);
     if (error) {
-      console.error('❌ Validation Error:', error.details);
+      console.error('Validation Error:', error.details);
       return res.status(400).json({
         success: false,
         message: 'Validation error',
@@ -75,7 +75,7 @@ router.post('/create-order', paymentLimiter, async (req, res) => {
     const { amount, donorName, donorEmail, donorPhone, notes } = value;
 
     // Log extracted values
-    console.log('✅ Validated Data:', { amount, donorName, donorEmail, donorPhone });
+    console.log('Validated Data:', { amount, donorName, donorEmail, donorPhone });
 
     // Validate amount with Razorpay service
     if (!razorpayService.validateAmount(amount)) {
@@ -224,7 +224,7 @@ router.post('/verify-payment', async (req, res) => {
         paymentMethod: donation.paymentMethod
       });
     } catch (emailError) {
-      console.error('⚠️ Failed to send donation confirmation email:', emailError);
+      console.error('Failed to send donation confirmation email:', emailError);
       // Don't fail the transaction if email fails
     }
 
@@ -245,7 +245,7 @@ router.post('/verify-payment', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Verify Payment Error:', error);
+    console.error('Payment Verification Error:', error);
     res.status(500).json({
       success: false,
       message: 'Internal server error while verifying payment',
@@ -294,6 +294,8 @@ router.get('/details/:orderId', async (req, res) => {
     });
   }
 });
+
+
 
 // Webhook handler for Razorpay events
 router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
@@ -346,6 +348,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
   }
 });
 
+
 // Helper function to handle payment captured webhook
 async function handlePaymentCaptured(payment) {
   try {
@@ -363,6 +366,7 @@ async function handlePaymentCaptured(payment) {
   }
 }
 
+
 // Helper function to handle payment failed webhook
 async function handlePaymentFailed(payment) {
   try {
@@ -378,6 +382,7 @@ async function handlePaymentFailed(payment) {
   }
 }
 
+
 // Helper function to handle order paid webhook
 async function handleOrderPaid(order) {
   try {
@@ -391,7 +396,9 @@ async function handleOrderPaid(order) {
   }
 }
 
-// Get donation statistics (admin endpoint)
+
+
+// Get donation statistics (admin endpoint) (not using rn!!)
 router.get('/stats', async (req, res) => {
   try {
     const stats = await Donation.getDonationStats();

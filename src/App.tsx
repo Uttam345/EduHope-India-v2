@@ -15,7 +15,7 @@ import NotFoundPage from './pages/NotFoundPage';
 const App: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen">
-      <ScrollToTop />
+      <ScrollToTop />                                    {/* Monitors route changes and scrolls to top */}
       <Navbar />
       <main className="flex-grow">
         <Routes>

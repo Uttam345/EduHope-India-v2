@@ -27,7 +27,7 @@ const HomePage: React.FC = () => {
           <img
             //src="https://images.pexels.com/photos/8754960/pexels-photo-8754960.jpeg"
             src="https://media.istockphoto.com/id/1207168332/photo/adult-and-children-hands-holding-paper-family-cutout-family-home-foster-care-homeless-charity.webp?a=1&b=1&s=612x612&w=0&k=20&c=naLilpoWBWb-X5mC2Mi36NAZtAs9fN1ib64Xp52hHGY="
-            alt="Children in classroom"
+            alt="Parents and Children holding hands"
             className="w-full h-full object-cover"
           />
         </div>

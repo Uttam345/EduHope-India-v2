@@ -35,10 +35,10 @@ class GmailNewsletterService {
       // Verify the connection
       await this.transporter.verify();
       this.initialized = true;
-      console.log('✅ Gmail Newsletter Service initialized successfully');
+      console.log('Gmail Newsletter Service initialized successfully');
 
     } catch (error) {
-      console.error('❌ Gmail Newsletter Service initialization failed:', error.message);
+      console.error('Gmail Newsletter Service initialization failed:', error.message);
       throw error;
     }
   }
@@ -77,7 +77,7 @@ class GmailNewsletterService {
       };
 
     } catch (error) {
-      console.error('❌ Failed to send welcome email:', error);
+      console.error('Failed to send welcome email:', error);
       return {
         success: false,
         error: error.message,
@@ -164,7 +164,7 @@ class GmailNewsletterService {
               messageId: result.messageId
             };
           } catch (error) {
-            console.error(`❌ Failed to send newsletter to ${subscriber.email}:`, error.message);
+            console.error(`Failed to send newsletter to ${subscriber.email}:`, error.message);
             return {
               email: subscriber.email,
               success: false,
@@ -194,7 +194,7 @@ class GmailNewsletterService {
       };
 
     } catch (error) {
-      console.error('❌ Failed to send newsletter:', error);
+      console.error('Failed to send newsletter:', error);
       return {
         success: false,
         error: error.message
@@ -474,7 +474,7 @@ Status: Working perfectly!
       };
 
     } catch (error) {
-      console.error('❌ Failed to send test email:', error);
+      console.error('Failed to send test email:', error);
       return {
         success: false,
         error: error.message,

@@ -83,7 +83,8 @@ const NewsletterForm: React.FC<NewsletterFormProps> = ({ onSuccess }) => {
       setEmail('');
       setName('');
 
-      if (onSuccess) {
+      //It's purpose is not serving now, but maybe used in future for tracking successful subscriptions
+      if (onSuccess) { 
         onSuccess();
       }
 

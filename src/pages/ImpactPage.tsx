@@ -59,7 +59,7 @@ const ImpactPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
         <ImpactCounter
           icon={<Pie className="w-10 h-10 text-primary" />}
-          count={5235}
+          count={5000}
           label="Children Supported"
         />
         <ImpactCounter
@@ -69,7 +69,7 @@ const ImpactPage: React.FC = () => {
         />
         <ImpactCounter
           icon={<Pie className="w-10 h-10 text-primary" />}
-          count={12584}
+          count={12000}
           label="Meals Provided"
         />
         <ImpactCounter
@@ -94,8 +94,14 @@ const ImpactPage: React.FC = () => {
               percentage: 25,
               color: 'bg-secondary',
             },
-            { label: 'Family Support', percentage: 20, color: 'bg-accent' },
-            { label: 'Administration', percentage: 10, color: 'bg-gray-500' },
+            { label: 'Family Support', 
+              percentage: 20, 
+              color: 'bg-accent' 
+            },
+            { label: 'Administration', 
+              percentage: 10, 
+              color: 'bg-gray-500' 
+            },
           ].map((item, index) => (
             <div key={index}>
               <div className="flex justify-between mb-1">

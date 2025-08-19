@@ -59,6 +59,8 @@ const DonationSuccessPage: React.FC = () => {
     );
   }
 
+
+  // Error handling
   if (error || !donationDetails) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">

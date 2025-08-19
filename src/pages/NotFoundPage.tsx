@@ -5,7 +5,7 @@ import { Home } from 'lucide-react';
 const NotFoundPage: React.FC = () => {
   // Update page title
   useEffect(() => {
-    document.title = 'Page Not Found - EduHope India';
+    document.title = 'Page Not Found';
   }, []);
 
   return (

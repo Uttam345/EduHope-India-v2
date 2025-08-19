@@ -19,6 +19,7 @@ class RazorpayService {
     }
     return this.razorpay;
   }
+
   // Create a Razorpay order
   async createOrder(amount, receipt, notes = {}) {
     try {
@@ -72,6 +73,7 @@ class RazorpayService {
       return false;
     }
   }
+
   // Fetch payment details
   async getPaymentDetails(paymentId) {
     try {
@@ -89,6 +91,7 @@ class RazorpayService {
       };
     }
   }
+  
   // Capture payment (for authorized payments)
   async capturePayment(paymentId, amount) {
     try {

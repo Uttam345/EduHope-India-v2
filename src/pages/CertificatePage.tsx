@@ -21,7 +21,7 @@ const CertificatePage: React.FC = () => {
   // Mock certificate data
   const certificateData = {
     id: id || '12345',
-    donorName: 'Arjun Patel',
+    donorName: 'Uttam Bansal_01',
     amount: 2500,
     date: new Date().toLocaleDateString('en-US', {
       year: 'numeric',

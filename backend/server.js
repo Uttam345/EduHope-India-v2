@@ -20,14 +20,14 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Connect to MongoDB
+// Connect to MongoDB asynchronously
 let dbConnected = false;
 (async () => {
   dbConnected = await connectDB();
   if (dbConnected) {
-    console.log('💾 Database: Connected to MongoDB');
+    console.log('Database: Connected to MongoDB');
   } else {
-    console.log('💾 Database: Running without MongoDB - limited functionality');
+    console.log('Database: Running without MongoDB - limited functionality');
   }
 })();
 
@@ -61,12 +61,12 @@ const corsOptions = {
       'https://eduhopeindia.me'
     ];
     
-    console.log('🔍 CORS Check:', { origin, allowedOrigins, envCorsOrigin: process.env.CORS_ORIGIN });
+    console.log('CORS Check:', { origin, allowedOrigins, envCorsOrigin: process.env.CORS_ORIGIN });
     
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.log('❌ CORS Rejected:', origin);
+      console.log('CORS Rejected:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -133,29 +133,29 @@ app.use(errorHandler);
 const server = app.listen(PORT, '0.0.0.0', () => {
   const isProduction = process.env.NODE_ENV === 'production';
   const serverUrl = isProduction 
-    ? `https://${process.env.RENDER_EXTERNAL_HOSTNAME || 'your-app.onrender.com'}` 
+    ? `https://${process.env.RENDER_EXTERNAL_HOSTNAME}` 
     : `http://localhost:${PORT}`;
     
   console.log(`
-🚀 EduHope India Backend Server Started
-📍 Environment: ${process.env.NODE_ENV || 'development'}
-🌐 Server running on port ${PORT}
-🔗 Server URL: ${serverUrl}
-📧 Email Service: Initializing...
-🗄️ Database: ${dbConnected ? 'Connected' : 'Disconnected'}
+  EduHope India Backend Server Started
+  Environment: ${process.env.NODE_ENV || 'development'}
+  Server running on port ${PORT}
+  Server URL: ${serverUrl}
+  Email Service: Initializing...
+  Database: ${dbConnected ? 'Connected' : 'Disconnected'}
   `);
 });
 
-// Graceful shutdown
+// Graceful shutdown on signal interrupt(ctrl+c) or any other termination signal
 process.on('SIGTERM', () => {
-  console.log('💤 SIGTERM received. Shutting down gracefully...');
+  console.log(' SIGTERM received. Shutting down gracefully...');
   server.close(() => {
     console.log('✅ Process terminated');
   });
 });
 
 process.on('SIGINT', () => {
-  console.log('💤 SIGINT received. Shutting down gracefully...');
+  console.log(' SIGINT received. Shutting down gracefully...');
   server.close(() => {
     console.log('✅ Process terminated');
   });
